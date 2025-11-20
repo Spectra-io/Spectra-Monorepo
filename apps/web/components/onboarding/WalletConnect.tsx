@@ -3,8 +3,9 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner'
-import { Wallet, CheckCircle2 } from 'lucide-react'
+import { Wallet, CheckCircle2, AlertTriangle } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { connectWallet } from '@zk-identity/stellar-utils'
 
 interface WalletConnectProps {
   onConnect: (publicKey: string) => void
@@ -14,22 +15,30 @@ export function WalletConnect({ onConnect }: WalletConnectProps) {
   const [loading, setLoading] = useState(false)
   const [connected, setConnected] = useState(false)
   const [publicKey, setPublicKey] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   async function handleConnect() {
     try {
       setLoading(true)
-      
-      // Mock: Simular conexión de wallet
-      // En producción, aquí usarías: await connectWallet() de @zk-identity/stellar-utils
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      const mockPublicKey = 'G' + 'A'.repeat(55) // Mock Stellar public key
-      setPublicKey(mockPublicKey)
+      setError(null)
+
+      // Connect to Freighter wallet
+      const walletPublicKey = await connectWallet()
+
+      setPublicKey(walletPublicKey)
       setConnected(true)
-      onConnect(mockPublicKey)
+      onConnect(walletPublicKey)
     } catch (error) {
       console.error('Error connecting wallet:', error)
-      alert('Error connecting wallet. Please try again.')
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      setError(errorMessage)
+
+      // Show user-friendly message
+      if (errorMessage.includes('not installed')) {
+        alert('Freighter wallet extension is not installed. Please install it from https://www.freighter.app/')
+      } else {
+        alert(`Error connecting wallet: ${errorMessage}`)
+      }
     } finally {
       setLoading(false)
     }
@@ -53,6 +62,25 @@ export function WalletConnect({ onConnect }: WalletConnectProps) {
           Connect your Freighter wallet to link your Stellar account with Spectra
         </p>
       </div>
+
+      {error && (
+        <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-red-400 mt-0.5" />
+          <div>
+            <p className="text-sm text-red-300">{error}</p>
+            {error.includes('not installed') && (
+              <a
+                href="https://www.freighter.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-purple-400 hover:text-purple-300 underline mt-1 inline-block"
+              >
+                Install Freighter Wallet →
+              </a>
+            )}
+          </div>
+        </div>
+      )}
 
       {!connected ? (
         <div className="flex justify-center">
@@ -96,4 +124,3 @@ export function WalletConnect({ onConnect }: WalletConnectProps) {
     </div>
   )
 }
-
