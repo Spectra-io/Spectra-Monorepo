@@ -4,8 +4,23 @@ Esta carpeta contiene toda la documentación técnica del proyecto.
 
 ## Archivos
 
+### Documentación General
 - **context.md**: Arquitectura técnica completa del proyecto
 - **basic-guia.md**: Guía de inicialización del proyecto base
+
+### Guías Individuales por Rol
+- **guia-angie-frontend.md**: Guía completa para implementación de UI/UX
+- **guia-denisse-database-encryption.md**: Guía de encriptación y base de datos
+- **guia-isa-camera.md**: Guía para componente de cámara
+- **guia-karu-biometric.md**: Guía de biometría y hashing
+
+Cada guía incluye:
+- ✅ Contexto completo del proyecto
+- ✅ Código de ejemplo funcional
+- ✅ Instrucciones de integración con otros componentes
+- ✅ Checklist de tareas
+- ✅ Tips de debugging
+- ✅ Recursos y referencias
 
 ## Recursos adicionales
 
