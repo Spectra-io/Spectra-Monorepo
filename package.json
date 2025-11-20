@@ -1,0 +1,22 @@
+{
+  "name": "zk-identity-stellar",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "start": "turbo start",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "clean": "turbo clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "turbo": "latest",
+    "prettier": "^3.1.0",
+    "eslint": "^8.54.0"
+  },
+  "packageManager": "pnpm@8.11.0",
+  "engines": {
+    "node": ">=18"
+  }
+}
