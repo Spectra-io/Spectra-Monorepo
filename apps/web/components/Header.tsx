@@ -36,16 +36,16 @@ export function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 overflow-x-hidden ${
         isScrolled
-          ? 'bg-black/95 backdrop-blur-md border-b border-gray-800'
-          : 'bg-black/80 backdrop-blur-sm'
+          ? 'bg-gray-900/20 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/20'
+          : 'bg-gray-900/10 backdrop-blur-lg border-b border-white/5'
       }`}
     >
       <nav className="max-w-7xl mx-auto px-5 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <div className="flex-shrink-0 -ml-8 lg:-ml-10">
+          <div className="flex-shrink-0 -ml-2 lg:-ml-10">
             <Logo />
           </div>
 
@@ -55,9 +55,10 @@ export function Header() {
               <button
                 key={item.href}
                 onClick={() => scrollToSection(item.href)}
-                className="text-gray-300 hover:text-purple-400 transition-colors text-sm font-medium"
+                className="text-gray-200 hover:text-purple-300 transition-colors text-sm font-medium relative group"
               >
                 {item.label}
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-400 group-hover:w-full transition-all duration-300"></span>
               </button>
             ))}
             <Button
@@ -71,7 +72,7 @@ export function Header() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden text-gray-300 hover:text-purple-400 transition-colors p-2"
+            className="lg:hidden text-gray-200 hover:text-purple-300 transition-colors p-2 rounded-lg hover:bg-white/5"
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? (
@@ -90,14 +91,14 @@ export function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-black/98 backdrop-blur-md border-t border-gray-800"
+            className="lg:hidden bg-gray-900/30 backdrop-blur-xl border-t border-white/10"
           >
             <div className="px-5 py-6 space-y-4">
               {navItems.map((item) => (
                 <button
                   key={item.href}
                   onClick={() => scrollToSection(item.href)}
-                  className="block w-full text-left text-gray-300 hover:text-purple-400 transition-colors text-base font-medium py-2"
+                  className="block w-full text-left text-gray-200 hover:text-purple-300 transition-colors text-base font-medium py-2 rounded-lg hover:bg-white/5 px-2"
                 >
                   {item.label}
                 </button>

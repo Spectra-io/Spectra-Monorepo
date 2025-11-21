@@ -10,7 +10,14 @@ import Image from 'next/image'
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-950 via-black to-gray-950 text-white">
+    <main className="min-h-screen bg-gradient-to-b from-gray-950 via-black to-gray-950 text-white overflow-x-hidden relative">
+      {/* Global Background Effects */}
+      <div className="fixed inset-0 bg-gradient-to-b from-purple-950/40 via-black to-gray-950 pointer-events-none"></div>
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(139,92,246,0.2),transparent_50%)] pointer-events-none"></div>
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_80%_70%,rgba(236,72,153,0.15),transparent_50%)] pointer-events-none"></div>
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.1),transparent_70%)] pointer-events-none"></div>
+      
+      <div className="relative z-10">
       <Header />
       {/* Hero Section */}
       <section id="inicio" className="relative overflow-hidden px-5 pt-40 pb-12 lg:pt-48 lg:pb-16">
@@ -47,45 +54,45 @@ export default function Home() {
                 From Days to Seconds
               </motion.h1>
               <motion.p 
-                className="text-lg lg:text-xl text-gray-300 mb-4 leading-relaxed"
+                className="text-lg lg:text-xl text-gray-300 mb-6 leading-relaxed"
               >
-                Spectra eliminates repetitive KYC across Stellar. One verification gives you instant access to all anchors—with blockchain-powered privacy that never exposes your documents.
+                Verify your identity once. Access all Stellar anchors instantly. Your documents stay private with blockchain-powered Zero Knowledge Proofs.
               </motion.p>
-              <p className="text-base lg:text-lg text-gray-400 mb-8 leading-relaxed">
-                Trusted identity verification. Seamless access. Uncompromised privacy.
-              </p>
-              <div className="flex flex-col gap-4 lg:flex-row lg:justify-start lg:items-center">
+              <div className="flex flex-col sm:flex-row gap-4 lg:justify-start lg:items-center">
                 <motion.div
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full lg:w-auto"
+                  className="w-full sm:w-auto"
                 >
                   <Button
                     asChild
                     size="lg"
-                    className="bg-purple-600 hover:bg-purple-700 text-white border-0 text-lg lg:text-base w-full lg:w-auto px-8 py-7 lg:py-6 rounded-lg font-medium"
+                    className="bg-purple-600 hover:bg-purple-700 text-white border-0 text-base lg:text-lg w-full sm:w-auto px-8 py-6 lg:py-7 rounded-lg font-semibold shadow-lg shadow-purple-500/20"
                   >
                     <Link href="/onboarding" className="flex items-center justify-center">
-                      Start KYC
-                      <ArrowRight className="ml-2 w-5 h-5 lg:w-4 lg:h-4" />
+                      Get Started
+                      <ArrowRight className="ml-2 w-5 h-5" />
                     </Link>
                   </Button>
                 </motion.div>
                 <motion.div
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full lg:w-auto"
+                  className="w-full sm:w-auto"
                 >
                   <Button
                     asChild
                     variant="outline"
                     size="lg"
-                    className="border border-gray-700 text-gray-300 hover:bg-gray-900 hover:text-white text-lg lg:text-base w-full lg:w-auto px-8 py-7 lg:py-6 rounded-lg font-medium"
+                    className="border-2 border-gray-700 text-gray-300 hover:bg-gray-900 hover:border-gray-600 hover:text-white text-base lg:text-lg w-full sm:w-auto px-8 py-6 lg:py-7 rounded-lg font-medium"
                   >
-                    <Link href="/dashboard">View Dashboard</Link>
+                    <Link href="#caracteristicas">Learn More</Link>
                   </Button>
                 </motion.div>
               </div>
+              <p className="text-sm text-gray-500 mt-3 text-center lg:text-left">
+                Solo validación
+              </p>
             </motion.div>
 
             {/* Right Column - Code Snippet Visual */}
@@ -95,24 +102,41 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="lg:mt-0"
             >
-              <div className="relative bg-gray-900/50 border border-gray-800 rounded-lg p-4 lg:p-6 overflow-hidden group hover:border-purple-500/50 transition-all duration-300">
-                {/* Animated Background */}
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/5 to-purple-500/0 group-hover:from-purple-500/10 group-hover:via-purple-500/15 group-hover:to-purple-500/10 transition-all duration-500"></div>
+              <div className="relative bg-gray-900/70 backdrop-blur-sm border border-gray-800 rounded-xl p-5 lg:p-7 overflow-hidden group hover:border-purple-500/60 transition-all duration-300 shadow-2xl shadow-purple-900/20">
+                {/* Animated Background Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 via-purple-500/5 to-purple-600/0 group-hover:from-purple-500/10 group-hover:via-purple-500/20 group-hover:to-purple-600/10 transition-all duration-500"></div>
+                
+                {/* Glow Effect */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 
                 <div className="relative z-10">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                    <span className="ml-4 text-xs text-gray-500 font-mono">zk-proof.ts</span>
+                  {/* Terminal Header */}
+                  <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-800/50">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
+                      <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
+                      <div className="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>
+                    </div>
+                    <span className="text-xs text-gray-500 font-mono">zk-proof.ts</span>
                   </div>
-                  <div className="font-mono text-sm lg:text-base space-y-1">
+                  
+                  {/* Code Content */}
+                  <div className="font-mono text-xs lg:text-sm space-y-2 leading-relaxed">
+                    <motion.div
+                      className="text-gray-400"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.6 }}
+                    >
+                      <span className="text-gray-500">//</span> <span className="text-gray-500 italic">Generate ZK proof for identity</span>
+                    </motion.div>
                     <motion.div
                       className="text-gray-300"
                       initial={{ opacity: 0 }}
                       whileInView={{ opacity: 1 }}
                       viewport={{ once: true }}
-                      transition={{ delay: 0.6 }}
+                      transition={{ delay: 0.7 }}
                     >
                       <span className="text-purple-400">const</span> <span className="text-blue-400">proof</span> = <span className="text-green-400">await</span> <span className="text-yellow-400">generateZKProof</span>({'{'}
                     </motion.div>
@@ -123,17 +147,52 @@ export default function Home() {
                       viewport={{ once: true }}
                       transition={{ delay: 0.8 }}
                     >
-                      <span className="text-blue-400">identity</span>: <span className="text-green-400">userData</span>,<br />
-                      <span className="text-blue-400">reveal</span>: <span className="text-orange-400">false</span>
+                      <span className="text-blue-400">identity</span>: <span className="text-green-400">userData</span>,
+                    </motion.div>
+                    <motion.div
+                      className="text-gray-300 pl-4"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.9 }}
+                    >
+                      <span className="text-blue-400">reveal</span>: <span className="text-orange-400">false</span>,
+                    </motion.div>
+                    <motion.div
+                      className="text-gray-300 pl-4"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 1.0 }}
+                    >
+                      <span className="text-blue-400">anchor</span>: <span className="text-green-400">"stellar"</span>
                     </motion.div>
                     <motion.div
                       className="text-gray-300"
                       initial={{ opacity: 0 }}
                       whileInView={{ opacity: 1 }}
                       viewport={{ once: true }}
-                      transition={{ delay: 1.0 }}
+                      transition={{ delay: 1.1 }}
                     >
                       {'}'});
+                    </motion.div>
+                    <motion.div
+                      className="pt-2"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 1.2 }}
+                    >
+                      <span className="text-gray-500">//</span> <span className="text-green-400">✓ Proof generated</span>
+                    </motion.div>
+                    <motion.div
+                      className="text-gray-400"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 1.3 }}
+                    >
+                      <span className="text-gray-500">//</span> <span className="text-gray-500 italic">Access granted to all Stellar anchors</span>
                     </motion.div>
                   </div>
                 </div>
@@ -143,209 +202,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* About Us Section */}
-      <section id="quienes-somos" className="px-5 py-20 lg:py-28 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-950/50 to-black"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.08),transparent_70%)]"></div>
-        <div className="relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl lg:text-5xl font-bold mb-4 text-gray-100">
-              About Us
-            </h2>
-            <p className="text-lg lg:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-              Learn more about our mission and vision
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            {/* Text Content - Left */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="space-y-6 text-gray-300 text-lg lg:text-xl leading-relaxed"
-            >
-              <p>
-                We are a team passionate about privacy and digital security. 
-                At <span className="text-purple-400 font-semibold">Spectra</span>, 
-                we believe your identity belongs to you and you should have complete control over it.
-              </p>
-              <p>
-                We use <span className="text-purple-400 font-semibold">Zero Knowledge Proofs</span> 
-                {' '}technology to allow you to verify your identity without revealing sensitive information. 
-                This means you can prove who you are without sharing 
-                unnecessary personal data.
-              </p>
-              <p>
-                Our platform is built on the <span className="text-purple-400 font-semibold">Stellar</span> network, 
-                enabling seamless integration with the decentralized financial ecosystem 
-                while keeping your privacy intact.
-              </p>
-            </motion.div>
-
-            {/* Visual Element - Right */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="relative h-64 lg:h-96 w-full rounded-2xl overflow-hidden bg-gradient-to-br from-purple-900/20 via-black to-purple-950/20 border border-purple-500/20"
-            >
-              {/* Background Pattern */}
-              <div className="absolute inset-0 opacity-10">
-                <svg className="w-full h-full" viewBox="0 0 400 400" fill="none">
-                  {/* Grid Pattern */}
-                  <defs>
-                    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="1" className="text-purple-500"/>
-                    </pattern>
-                  </defs>
-                  <rect width="100%" height="100%" fill="url(#grid)" />
-                </svg>
-              </div>
-
-              {/* Center Illustration */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <svg viewBox="0 0 300 300" className="w-full h-full max-w-md">
-                  {/* Outer Shield - Privacy Protection */}
-                  <motion.path
-                    d="M150 50 L220 80 L220 150 L150 220 L80 150 L80 80 Z"
-                    fill="none"
-                    stroke="url(#shieldGradient)"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    whileInView={{ pathLength: 1, opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1.5, delay: 0.5 }}
-                  />
-                  
-                  {/* Inner Lock - Security */}
-                  <motion.g
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.8 }}
-                  >
-                    <rect x="120" y="140" width="60" height="50" rx="5" fill="none" stroke="#a855f7" strokeWidth="2"/>
-                    <path d="M120 140 Q120 120 150 120 Q180 120 180 140" fill="none" stroke="#a855f7" strokeWidth="2"/>
-                    <circle cx="150" cy="165" r="8" fill="#a855f7" opacity="0.6"/>
-                  </motion.g>
-
-                  {/* Zero Knowledge Nodes - Representing ZK Proofs */}
-                  {[
-                    { cx: 100, cy: 100, delay: 1 },
-                    { cx: 200, cy: 100, delay: 1.2 },
-                    { cx: 100, cy: 200, delay: 1.4 },
-                    { cx: 200, cy: 200, delay: 1.6 },
-                  ].map((node, i) => (
-                    <motion.g 
-                      key={i}
-                      initial={{ opacity: 0, scale: 0 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: node.delay }}
-                    >
-                      <circle
-                        cx={node.cx}
-                        cy={node.cy}
-                        r="12"
-                        fill="#8b5cf6"
-                        opacity="0.4"
-                      />
-                      <motion.circle
-                        cx={node.cx}
-                        cy={node.cy}
-                        r="4"
-                        fill="#a855f7"
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.3, delay: node.delay + 0.2 }}
-                      />
-                      {/* Connection Lines */}
-                      <motion.line
-                        x1={node.cx}
-                        y1={node.cy}
-                        x2="150"
-                        y2="165"
-                        stroke="#8b5cf6"
-                        strokeWidth="1.5"
-                        opacity="0.3"
-                        initial={{ pathLength: 0 }}
-                        whileInView={{ pathLength: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8, delay: node.delay + 0.3 }}
-                      />
-                    </motion.g>
-                  ))}
-
-                  {/* Stellar Network Representation */}
-                  <motion.circle
-                    cx="150"
-                    cy="150"
-                    r="60"
-                    fill="none"
-                    stroke="#ec4899"
-                    strokeWidth="2"
-                    strokeDasharray="5,5"
-                    opacity="0.3"
-                    initial={{ scale: 0, opacity: 0 }}
-                    whileInView={{ scale: 1, opacity: 0.3 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1, delay: 1.8 }}
-                  />
-
-                  {/* Gradient Definitions */}
-                  <defs>
-                    <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#a855f7" />
-                      <stop offset="50%" stopColor="#8b5cf6" />
-                      <stop offset="100%" stopColor="#ec4899" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </div>
-
-              {/* Floating Particles */}
-              {[...Array(6)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute w-2 h-2 bg-purple-400 rounded-full"
-                  style={{
-                    left: `${20 + i * 15}%`,
-                    top: `${30 + (i % 3) * 20}%`,
-                  }}
-                  animate={{
-                    y: [0, -20, 0],
-                    opacity: [0.3, 0.7, 0.3],
-                  }}
-                  transition={{
-                    duration: 3 + i * 0.5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: i * 0.3,
-                  }}
-                />
-              ))}
-            </motion.div>
-          </div>
-        </div>
-        </div>
-      </section>
-
       {/* Features Section */}
-      <section id="caracteristicas" className="px-5 py-20 lg:py-28 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.1),transparent_70%)]"></div>
+      <section id="caracteristicas" className="px-5 py-16 lg:py-24 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-950/30 via-purple-950/25 to-black/50"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_40%,rgba(139,92,246,0.18),transparent_65%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_60%,rgba(236,72,153,0.12),transparent_55%)]"></div>
         <div className="relative z-10">
         <div className="max-w-7xl mx-auto">
           <motion.div
@@ -355,15 +216,15 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl lg:text-5xl font-bold mb-4 text-gray-100">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-3 text-gray-100">
               Built for Privacy
             </h2>
-            <p className="text-lg lg:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-              Spectra provides the tools you need to verify your identity without compromising your privacy.
+            <p className="text-base lg:text-lg text-gray-400 max-w-xl mx-auto">
+              Everything you need to verify your identity without compromising your privacy.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {[
               {
                 icon: Shield,
@@ -376,19 +237,9 @@ export default function Home() {
                 description: 'Secure authentication through fingerprints and WebAuthn, ensuring only you can access your identity.',
               },
               {
-                icon: Key,
-                title: 'End-to-End Encryption',
-                description: 'Your data is fragmented and encrypted, distributed securely to eliminate single points of failure.',
-              },
-              {
                 icon: Database,
                 title: 'Distributed Storage',
                 description: 'Decentralized system that protects your information through fragmentation and secure distribution.',
-              },
-              {
-                icon: CheckCircle2,
-                title: 'Stellar Integration',
-                description: 'Seamlessly connects with the Stellar Network financial ecosystem while keeping your privacy intact.',
               },
               {
                 icon: Lock,
@@ -540,8 +391,10 @@ export default function Home() {
       </section>
 
       {/* How It Works Section */}
-      <section id="como-funciona" className="px-5 py-20 lg:py-28 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-950/50 to-black"></div>
+      <section id="como-funciona" className="px-5 py-16 lg:py-24 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-purple-950/20 to-gray-950/40"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(139,92,246,0.15),transparent_60%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_70%,rgba(236,72,153,0.1),transparent_50%)]"></div>
         <div className="relative z-10">
         <div className="max-w-4xl mx-auto">
           <motion.div
@@ -551,11 +404,11 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl lg:text-5xl font-bold mb-4 text-gray-100">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-3 text-gray-100">
               How It Works
             </h2>
-            <p className="text-lg lg:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-              Spectra simplifies the identity verification process, from initial capture to ZK proof generation.
+            <p className="text-base lg:text-lg text-gray-400 max-w-xl mx-auto">
+              Simple, secure, and fast—get verified in minutes.
             </p>
           </motion.div>
 
@@ -624,9 +477,10 @@ export default function Home() {
       </section>
 
       {/* Problems We Solve Section */}
-      <section id="problemas" className="px-5 py-20 lg:py-28 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.1),transparent_70%)]"></div>
+      <section id="problemas" className="px-5 py-16 lg:py-24 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-950/40 via-purple-950/25 to-black/50"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(139,92,246,0.16),transparent_65%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,rgba(236,72,153,0.12),transparent_55%)]"></div>
         <div className="relative z-10">
         <div className="max-w-5xl mx-auto">
           <motion.div
@@ -636,11 +490,11 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl lg:text-5xl font-bold mb-4 text-gray-100">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-3 text-gray-100">
               Problems We Solve
             </h2>
-            <p className="text-lg lg:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-              Traditional KYC processes compromise your privacy. Spectra changes that.
+            <p className="text-base lg:text-lg text-gray-400 max-w-xl mx-auto">
+              Traditional KYC compromises your privacy. We fix that.
             </p>
           </motion.div>
 
@@ -701,11 +555,12 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="px-5 py-20 lg:py-28 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-950/50 to-black"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(236,72,153,0.1),transparent_60%)]"></div>
+      <section className="px-5 py-16 lg:py-20 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-purple-950/30 to-gray-950/40"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(139,92,246,0.2),transparent_60%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_70%,rgba(236,72,153,0.15),transparent_55%)]"></div>
         <div className="relative z-10">
-        <div className="max-w-3xl mx-auto text-center">
+        <div className="max-w-2xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -713,36 +568,233 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="space-y-6"
           >
-            <h2 className="text-3xl lg:text-5xl font-bold text-gray-100">
-              Ready to Protect Your Identity?
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-100">
+              Ready to Get Started?
             </h2>
-            <p className="text-lg lg:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-              Start your KYC verification process securely and privately with Spectra.
+            <p className="text-base lg:text-lg text-gray-400 max-w-xl mx-auto">
+              Verify your identity once. Access everything. Stay private.
             </p>
             <motion.div
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="px-4"
+              className="pt-2"
             >
               <Button
                 asChild
                 size="lg"
-                className="bg-purple-600 hover:bg-purple-700 text-white border-0 text-lg lg:text-base w-full lg:w-auto px-10 py-7 lg:py-6 rounded-lg font-medium"
+                className="bg-purple-600 hover:bg-purple-700 text-white border-0 text-base lg:text-lg w-full sm:w-auto px-10 py-6 lg:py-7 rounded-lg font-semibold shadow-lg shadow-purple-500/20"
               >
                 <Link href="/onboarding" className="flex items-center justify-center">
-                  Get Started
-                  <ArrowRight className="ml-2 w-5 h-5 lg:w-4 lg:h-4" />
+                  Start Verification
+                  <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
               </Button>
             </motion.div>
+            <p className="text-sm text-gray-500 mt-3">
+              Solo validación
+            </p>
           </motion.div>
       </div>
         </div>
       </section>
 
+      {/* About Us Section */}
+      <section id="quienes-somos" className="px-5 py-16 lg:py-20 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-purple-950/20 via-black/50 to-gray-950/30"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(139,92,246,0.15),transparent_60%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(236,72,153,0.1),transparent_50%)]"></div>
+        <div className="relative z-10">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-10"
+          >
+            <h2 className="text-3xl lg:text-4xl font-bold mb-3 text-gray-100">
+              About Us
+            </h2>
+            <p className="text-base lg:text-lg text-gray-400 max-w-xl mx-auto">
+              Learn more about our mission and vision
+            </p>
+          </motion.div>
+
+          <div className="flex flex-col items-center gap-8">
+            {/* Visual Element - Centered */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="relative h-48 lg:h-56 w-full max-w-md rounded-2xl overflow-hidden bg-gradient-to-br from-purple-900/20 via-black to-purple-950/20 border border-purple-500/20"
+            >
+              {/* Background Pattern */}
+              <div className="absolute inset-0 opacity-10">
+                <svg className="w-full h-full" viewBox="0 0 400 400" fill="none">
+                  {/* Grid Pattern */}
+                  <defs>
+                    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="1" className="text-purple-500"/>
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#grid)" />
+                </svg>
+              </div>
+
+              {/* Center Illustration */}
+              <div className="absolute inset-0 flex items-center justify-center p-4">
+                <svg viewBox="0 0 300 300" className="w-full h-full max-w-xs">
+                  {/* Outer Shield - Privacy Protection */}
+                  <motion.path
+                    d="M150 50 L220 80 L220 150 L150 220 L80 150 L80 80 Z"
+                    fill="none"
+                    stroke="url(#shieldGradient)"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    whileInView={{ pathLength: 1, opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.5, delay: 0.5 }}
+                  />
+                  
+                  {/* Inner Lock - Security */}
+                  <motion.g
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.8 }}
+                  >
+                    <rect x="120" y="140" width="60" height="50" rx="5" fill="none" stroke="#a855f7" strokeWidth="2"/>
+                    <path d="M120 140 Q120 120 150 120 Q180 120 180 140" fill="none" stroke="#a855f7" strokeWidth="2"/>
+                    <circle cx="150" cy="165" r="8" fill="#a855f7" opacity="0.6"/>
+                  </motion.g>
+
+                  {/* Zero Knowledge Nodes - Representing ZK Proofs */}
+                  {[
+                    { cx: 100, cy: 100, delay: 1 },
+                    { cx: 200, cy: 100, delay: 1.2 },
+                    { cx: 100, cy: 200, delay: 1.4 },
+                    { cx: 200, cy: 200, delay: 1.6 },
+                  ].map((node, i) => (
+                    <motion.g 
+                      key={i}
+                      initial={{ opacity: 0, scale: 0 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: node.delay }}
+                    >
+                      <circle
+                        cx={node.cx}
+                        cy={node.cy}
+                        r="12"
+                        fill="#8b5cf6"
+                        opacity="0.4"
+                      />
+                      <motion.circle
+                        cx={node.cx}
+                        cy={node.cy}
+                        r="4"
+                        fill="#a855f7"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.3, delay: node.delay + 0.2 }}
+                      />
+                      {/* Connection Lines */}
+                      <motion.line
+                        x1={node.cx}
+                        y1={node.cy}
+                        x2="150"
+                        y2="165"
+                        stroke="#8b5cf6"
+                        strokeWidth="1.5"
+                        opacity="0.3"
+                        initial={{ pathLength: 0 }}
+                        whileInView={{ pathLength: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, delay: node.delay + 0.3 }}
+                      />
+                    </motion.g>
+                  ))}
+
+                  {/* Stellar Network Representation */}
+                  <motion.circle
+                    cx="150"
+                    cy="150"
+                    r="60"
+                    fill="none"
+                    stroke="#ec4899"
+                    strokeWidth="2"
+                    strokeDasharray="5,5"
+                    opacity="0.3"
+                    initial={{ scale: 0, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 0.3 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, delay: 1.8 }}
+                  />
+
+                  {/* Gradient Definitions */}
+                  <defs>
+                    <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#a855f7" />
+                      <stop offset="50%" stopColor="#8b5cf6" />
+                      <stop offset="100%" stopColor="#ec4899" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+
+              {/* Floating Particles */}
+              {[...Array(6)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-2 h-2 bg-purple-400 rounded-full"
+                  style={{
+                    left: `${20 + i * 15}%`,
+                    top: `${30 + (i % 3) * 20}%`,
+                  }}
+                  animate={{
+                    y: [0, -20, 0],
+                    opacity: [0.3, 0.7, 0.3],
+                  }}
+                  transition={{
+                    duration: 3 + i * 0.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: i * 0.3,
+                  }}
+                />
+              ))}
+            </motion.div>
+
+            {/* Text Content - Centered */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="text-center space-y-4 max-w-2xl"
+            >
+              <p className="text-gray-300 text-base lg:text-lg leading-relaxed">
+                At <span className="text-purple-400 font-semibold">Spectra</span>, we believe your identity belongs to you. 
+                We use <span className="text-purple-400 font-semibold">Zero Knowledge Proofs</span> to verify your identity 
+                without revealing sensitive information—prove who you are without sharing unnecessary data.
+              </p>
+              <p className="text-gray-300 text-base lg:text-lg leading-relaxed">
+                Built on the <span className="text-purple-400 font-semibold">Stellar</span> network, 
+                Spectra enables seamless access to financial services while keeping your privacy intact.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="border-t border-gray-800 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-950 to-black"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-950/50 via-black to-black"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(139,92,246,0.1),transparent_50%)]"></div>
         <div className="relative z-10">
         <div className="max-w-7xl mx-auto px-5 py-12 lg:py-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 mb-8">
@@ -816,6 +868,7 @@ export default function Home() {
         </div>
         </div>
       </footer>
+      </div>
     </main>
   )
 }
