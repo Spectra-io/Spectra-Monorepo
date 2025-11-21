@@ -1,7 +1,7 @@
 'use client'
 
 import BiometricCapture from '@/components/biometric/BiometricCapture'
-import type { BiometricCaptureProps } from '@/components/biometric/types'
+import { useIdentityStore } from '@/store/useIdentityStore'
 
 interface BiometricStepProps {
   userId?: string | null
@@ -11,21 +11,34 @@ interface BiometricStepProps {
   onCancel?: () => void
 }
 
-export function BiometricStep({ userId, userName, onCapture, onError, onCancel }: BiometricStepProps) {
-  // Encapsula el componente real `BiometricCapture` y adapta la firma de onCapture
-  const handleCapture: BiometricCaptureProps['onCapture'] = (biometricId, credential) => {
-    // `BiometricCapture` pasa (id, credential) — aquí solo propagamos el id al padre
-    onCapture(biometricId)
-  }
+export function BiometricStep({ onCapture }: BiometricStepProps) {
+  const stellarPublicKey = useIdentityStore(state => state.stellarPublicKey)
+
+  // Use stellar public key as userId if available, otherwise generate a temporary one
+  const userId = stellarPublicKey || `temp_${Date.now()}`
+  const userName = 'User' // Could be enhanced to use actual name from DNI data
 
   return (
-    <div>
+    <div className="space-y-6">
+      <div className="text-center space-y-4 mb-6">
+        <h2 className="text-2xl lg:text-3xl font-bold text-gray-100">
+          Biometric Verification
+        </h2>
+        <p className="text-gray-400 text-lg">
+          Register your biometric data for secure authentication
+        </p>
+      </div>
+
       <BiometricCapture
-        userId={userId || ''}
-        userName={userName || ''}
-        onCapture={handleCapture}
-        onError={onError}
-        onCancel={onCancel}
+        userId={userId}
+        userName={userName}
+        onCapture={(biometricId, credential) => {
+          console.log('Biometric registered:', { biometricId, credential })
+          onCapture(biometricId)
+        }}
+        onError={(error) => {
+          console.error('Biometric error:', error)
+        }}
       />
     </div>
   )

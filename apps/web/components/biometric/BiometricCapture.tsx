@@ -1,4 +1,5 @@
 'use client'
+
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -31,7 +32,7 @@ export default function BiometricCapture({
     types: string[]
   }>({ available: false, types: [] })
 
-  // Verificar disponibilidad al montar
+  // Check availability on mount
   useEffect(() => {
     checkAvailability()
   }, [])
@@ -43,31 +44,31 @@ export default function BiometricCapture({
     if (!info.available) {
       setState(prev => ({
         ...prev,
-        error: 'Este dispositivo no tiene autenticación biométrica disponible'
+        error: 'This device does not have biometric authentication available'
       }))
-      onError?.('Biometría no disponible')
+      onError?.('Biometric authentication not available')
     }
   }
 
-  // Iniciar registro biométrico
+  // Start biometric registration
   const handleRegister = async () => {
     setState(prev => ({ ...prev, isRegistering: true, error: null }))
 
     try {
-      // 1. Registrar credencial biométrica
+      // 1. Register biometric credential
       const credential = await registerBiometric(userId, userName)
 
-      // 2. Generar ID biométrico único
+      // 2. Generate unique biometric ID
       const biometricId = await generateUniqueIdentifier(
         userId,
         credential.publicKey,
         Date.now()
       )
 
-      // 3. Hashear para mayor seguridad
+      // 3. Hash for additional security
       const biometricIdHash = await sha256(biometricId)
 
-      // 4. Actualizar estado
+      // 4. Update state
       setState(prev => ({
         ...prev,
         isRegistering: false,
@@ -75,7 +76,7 @@ export default function BiometricCapture({
         biometricId: biometricIdHash
       }))
 
-      // 5. Notificar al padre
+      // 5. Notify parent
       onCapture(biometricIdHash, credential)
 
     } catch (error: any) {
@@ -88,23 +89,23 @@ export default function BiometricCapture({
     }
   }
 
-  // Si no hay soporte, mostrar error
+  // If WebAuthn not supported
   if (!isWebAuthnAvailable()) {
     return (
-      <Card>
+      <Card className="bg-gray-900/50 border-gray-800">
         <CardContent className="py-12">
           <div className="text-center">
             <AlertTriangle className="w-16 h-16 mx-auto text-yellow-500 mb-4" />
-            <h3 className="text-lg font-semibold mb-2">
-              Biometría No Disponible
+            <h3 className="text-lg font-semibold mb-2 text-gray-100">
+              Biometric Authentication Not Available
             </h3>
-            <p className="text-gray-600 mb-4">
-              Tu navegador no soporta autenticación biométrica.
-              Por favor usa un navegador moderno (Chrome, Firefox, Safari).
+            <p className="text-gray-400 mb-4">
+              Your browser does not support biometric authentication.
+              Please use a modern browser (Chrome, Firefox, Safari).
             </p>
             {onCancel && (
-              <Button onClick={onCancel} variant="outline">
-                Volver
+              <Button onClick={onCancel} variant="outline" className="border-gray-700 text-gray-300 hover:bg-gray-800">
+                Go Back
               </Button>
             )}
           </div>
@@ -114,110 +115,110 @@ export default function BiometricCapture({
   }
 
   return (
-    <Card>
+    <Card className="bg-gray-900/50 border-gray-800">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-gray-100">
           <Fingerprint className="w-6 h-6" />
-          Registro Biométrico
+          Biometric Registration
         </CardTitle>
-        <p className="text-sm text-gray-600">
-          Registra tu huella digital o reconocimiento facial para proteger tu identidad
+        <p className="text-sm text-gray-400">
+          Register your fingerprint or facial recognition to protect your identity
         </p>
       </CardHeader>
 
       <CardContent>
-        {/* Estado: Sin registrar */}
+        {/* State: Not registered */}
         {!state.registered && !state.isRegistering && (
           <div className="text-center py-8">
-            {/* Icono de huella */}
+            {/* Fingerprint Icon */}
             <div className="mb-6">
-              <div className="w-32 h-32 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
-                <Fingerprint className="w-20 h-20 text-blue-600" />
+              <div className="w-32 h-32 mx-auto bg-purple-900/20 rounded-full flex items-center justify-center border-2 border-purple-500/30">
+                <Fingerprint className="w-20 h-20 text-purple-400" />
               </div>
             </div>
 
-            <h3 className="text-xl font-semibold mb-3">
-              Protege tu Identidad
+            <h3 className="text-xl font-semibold mb-3 text-gray-100">
+              Protect Your Identity
             </h3>
 
-            <p className="text-gray-600 mb-6 max-w-md mx-auto">
-              Usaremos {authenticatorInfo.types.includes('platform') ? 'la biometría de tu dispositivo' : 'autenticación segura'}
-              {' '}para crear un identificador único que nadie más puede replicar.
+            <p className="text-gray-400 mb-6 max-w-md mx-auto">
+              We will use {authenticatorInfo.types.includes('platform') ? 'your device biometric authentication' : 'secure authentication'}
+              {' '}to create a unique identifier that only you can access.
             </p>
 
-            {/* Información de seguridad */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-left max-w-md mx-auto">
-              <h4 className="font-medium text-blue-900 mb-2 flex items-center gap-2">
+            {/* Security Information */}
+            <div className="bg-purple-900/10 border border-purple-500/20 rounded-lg p-4 mb-6 text-left max-w-md mx-auto">
+              <h4 className="font-medium text-purple-300 mb-2 flex items-center gap-2">
                 <Smartphone className="w-4 h-4" />
-                ¿Es seguro?
+                Is it secure?
               </h4>
-              <ul className="text-sm text-blue-800 space-y-1">
-                <li>✓ Tu huella nunca sale de tu dispositivo</li>
-                <li>✓ Solo se genera un ID único encriptado</li>
-                <li>✓ Imposible de replicar o robar</li>
+              <ul className="text-sm text-gray-300 space-y-1">
+                <li>✓ Your biometric data never leaves your device</li>
+                <li>✓ Only a unique encrypted ID is generated</li>
+                <li>✓ Impossible to replicate or steal</li>
               </ul>
             </div>
 
             {state.error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4 text-left max-w-md mx-auto">
-                <p className="text-sm text-red-800">{state.error}</p>
+              <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4 mb-4 text-left max-w-md mx-auto">
+                <p className="text-sm text-red-300">{state.error}</p>
               </div>
             )}
 
             <div className="flex gap-3 justify-center">
               {onCancel && (
-                <Button onClick={onCancel} variant="outline">
-                  Cancelar
+                <Button onClick={onCancel} variant="outline" className="border-gray-700 text-gray-300 hover:bg-gray-800">
+                  Cancel
                 </Button>
               )}
-              <Button onClick={handleRegister} size="lg">
+              <Button onClick={handleRegister} size="lg" className="bg-purple-600 hover:bg-purple-700">
                 <Fingerprint className="w-5 h-5 mr-2" />
-                Registrar Biometría
+                Register Biometric
               </Button>
             </div>
           </div>
         )}
 
-        {/* Estado: Registrando */}
+        {/* State: Registering */}
         {state.isRegistering && (
           <div className="text-center py-12">
-            <Loader2 className="w-16 h-16 mx-auto text-blue-600 animate-spin mb-4" />
-            <h3 className="text-lg font-semibold mb-2">
-              Esperando autenticación...
+            <Loader2 className="w-16 h-16 mx-auto text-purple-500 animate-spin mb-4" />
+            <h3 className="text-lg font-semibold mb-2 text-gray-100">
+              Waiting for authentication...
             </h3>
-            <p className="text-gray-600">
-              Por favor, completa la autenticación en tu dispositivo
+            <p className="text-gray-400">
+              Please complete the authentication on your device
             </p>
           </div>
         )}
 
-        {/* Estado: Registrado exitosamente */}
+        {/* State: Registered successfully */}
         {state.registered && state.biometricId && (
           <div className="text-center py-8">
             <div className="mb-6">
-              <div className="w-32 h-32 mx-auto bg-green-100 rounded-full flex items-center justify-center">
-                <Check className="w-20 h-20 text-green-600" />
+              <div className="w-32 h-32 mx-auto bg-green-900/20 rounded-full flex items-center justify-center border-2 border-green-500/30">
+                <Check className="w-20 h-20 text-green-400" />
               </div>
             </div>
 
-            <h3 className="text-xl font-semibold text-green-800 mb-3">
-              ✓ Biometría Registrada
+            <h3 className="text-xl font-semibold text-green-400 mb-3">
+              ✓ Biometric Registered
             </h3>
 
-            <p className="text-gray-600 mb-6">
-              Tu identidad biométrica ha sido registrada exitosamente
+            <p className="text-gray-400 mb-6">
+              Your biometric identity has been registered successfully
             </p>
 
-            {/* Mostrar ID (primeros caracteres) */}
-            <div className="bg-gray-50 rounded-lg p-4 max-w-md mx-auto mb-6">
-              <p className="text-xs text-gray-600 mb-1">ID Biométrico:</p>
-              <code className="text-xs font-mono text-gray-800">
+            {/* Show ID (first characters) */}
+            <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-4 max-w-md mx-auto mb-6">
+              <p className="text-xs text-gray-500 mb-1">Biometric ID:</p>
+              <code className="text-xs font-mono text-gray-300">
                 {state.biometricId.substring(0, 16)}...
               </code>
             </div>
 
             <p className="text-sm text-gray-500">
-              Continuando al siguiente paso...
+              Continuing to next step...
             </p>
           </div>
         )}

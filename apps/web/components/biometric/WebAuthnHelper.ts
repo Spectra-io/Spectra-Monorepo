@@ -1,13 +1,17 @@
+/**
+ * WebAuthn Helper Functions
+ * Biometric authentication using Web Authentication API
+ */
+
 import { startRegistration, startAuthentication } from '@simplewebauthn/browser'
 import type {
   PublicKeyCredentialCreationOptionsJSON,
   RegistrationResponseJSON
 } from '@simplewebauthn/types'
 import { BiometricCredential } from './types'
-import { arrayBufferToHex } from './HashingUtils'
 
 /**
- * Verifica si WebAuthn está disponible en el navegador
+ * Check if WebAuthn is available in the browser
  */
 export function isWebAuthnAvailable(): boolean {
   return !!(
@@ -18,7 +22,7 @@ export function isWebAuthnAvailable(): boolean {
 }
 
 /**
- * Detecta qué tipo de autenticador está disponible
+ * Detect available authenticator types
  */
 export async function detectAuthenticatorType(): Promise<{
   available: boolean
@@ -30,9 +34,13 @@ export async function detectAuthenticatorType(): Promise<{
 
   const types: string[] = []
 
-  // Verificar plataforma (Touch ID, Face ID, Windows Hello)
-  if (await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()) {
-    types.push('platform') // Biometría integrada
+  try {
+    // Check for platform authenticator (Touch ID, Face ID, Windows Hello)
+    if (await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()) {
+      types.push('platform')
+    }
+  } catch (error) {
+    console.warn('Error detecting authenticator:', error)
   }
 
   return {
@@ -42,28 +50,28 @@ export async function detectAuthenticatorType(): Promise<{
 }
 
 /**
- * Registra una nueva credencial biométrica
- * @param userId - ID único del usuario (puede ser el DNI hasheado)
- * @param userName - Nombre para mostrar
- * @returns Credencial registrada
+ * Register new biometric credential
+ * @param userId - Unique user ID (e.g., hashed DNI)
+ * @param userName - User's display name
+ * @returns Registered credential
  */
 export async function registerBiometric(
   userId: string,
   userName: string
 ): Promise<BiometricCredential> {
   try {
-    // Verificar disponibilidad
+    // Verify WebAuthn availability
     if (!isWebAuthnAvailable()) {
-      throw new Error('WebAuthn no está disponible en este navegador')
+      throw new Error('WebAuthn is not available in this browser')
     }
 
-    // Generar opciones de registro
-    // En producción, estas vendrían del servidor
+    // Generate registration options
+    // In production, these would come from the server
     const options: PublicKeyCredentialCreationOptionsJSON = {
       challenge: generateChallenge(),
       rp: {
         name: 'ZK Identity Stellar',
-        id: window.location.hostname, // e.g., 'localhost' or 'zkidentity.com'
+        id: window.location.hostname,
       },
       user: {
         id: userId,
@@ -71,22 +79,22 @@ export async function registerBiometric(
         displayName: userName,
       },
       pubKeyCredParams: [
-        { alg: -7, type: 'public-key' },  // ES256
-        { alg: -257, type: 'public-key' }, // RS256
+        { alg: -7, type: 'public-key' },   // ES256 (ECDSA)
+        { alg: -257, type: 'public-key' }, // RS256 (RSA)
       ],
-      timeout: 60000, // 60 segundos
+      timeout: 60000,
       attestation: 'none',
       authenticatorSelection: {
-        authenticatorAttachment: 'platform', // Solo autenticadores integrados
+        authenticatorAttachment: 'platform', // Only built-in authenticators
         requireResidentKey: false,
-        userVerification: 'required', // Requiere biometría
+        userVerification: 'required', // Requires biometric
       },
     }
 
-    // Iniciar registro
-    const credential = await startRegistration(options as any)
+    // Start registration
+    const credential = await startRegistration(options)
 
-    // Procesar respuesta
+    // Process response
     const credentialId = credential.id
     const publicKey = credential.response.publicKey || ''
 
@@ -97,19 +105,21 @@ export async function registerBiometric(
       algorithm: 'ES256'
     }
   } catch (error: any) {
-    // Manejar errores específicos
+    // Handle specific errors
     if (error.name === 'NotAllowedError') {
-      throw new Error('Registro cancelado por el usuario')
+      throw new Error('Registration cancelled by user')
     } else if (error.name === 'NotSupportedError') {
-      throw new Error('Biometría no soportada en este dispositivo')
+      throw new Error('Biometric authentication not supported on this device')
     } else {
-      throw new Error('Error en registro biométrico: ' + error.message)
+      throw new Error('Biometric registration error: ' + error.message)
     }
   }
 }
 
 /**
- * Verifica una credencial biométrica existente
+ * Verify existing biometric credential
+ * @param credentialId - Credential ID to verify
+ * @returns True if verified successfully
  */
 export async function verifyBiometric(
   credentialId: string
@@ -130,13 +140,14 @@ export async function verifyBiometric(
     await startAuthentication(options)
     return true
   } catch (error) {
+    console.error('Verification error:', error)
     return false
   }
 }
 
 /**
- * Genera un challenge aleatorio para WebAuthn
- * En producción, este vendría del servidor
+ * Generate random challenge for WebAuthn
+ * In production, this should come from the server
  */
 function generateChallenge(): string {
   const array = new Uint8Array(32)
@@ -148,7 +159,7 @@ function generateChallenge(): string {
 }
 
 /**
- * Convierte hex string a ArrayBuffer
+ * Convert hex string to ArrayBuffer
  */
 function hexToArrayBuffer(hex: string): ArrayBuffer {
   const bytes = new Uint8Array(hex.length / 2)
@@ -156,4 +167,12 @@ function hexToArrayBuffer(hex: string): ArrayBuffer {
     bytes[i / 2] = parseInt(hex.substr(i, 2), 16)
   }
   return bytes.buffer
+}
+
+/**
+ * Convert ArrayBuffer to hex string
+ */
+export function arrayBufferToHex(buffer: ArrayBuffer): string {
+  const byteArray = new Uint8Array(buffer)
+  return Array.from(byteArray, b => b.toString(16).padStart(2, '0')).join('')
 }
