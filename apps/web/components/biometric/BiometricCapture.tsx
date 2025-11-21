@@ -8,7 +8,7 @@ import {
   detectAuthenticatorType,
   registerBiometric
 } from './WebAuthnHelper'
-import { generateUniqueIdentifier, sha256 } from './HashingUtils'
+import { generateUniqueIdentifier, sha256 } from '@/lib/HashingUtils'
 import { BiometricCaptureProps, BiometricState, BiometricCredential } from './types'
 import { Fingerprint, Loader2, Check, AlertTriangle, Smartphone } from 'lucide-react'
 
@@ -104,7 +104,7 @@ export default function BiometricCapture({
               Please use a modern browser (Chrome, Firefox, Safari).
             </p>
             {onCancel && (
-              <Button onClick={onCancel} variant="outline" className="border-gray-700 text-gray-300 hover:bg-gray-800">
+              <Button onClick={onCancel} variant="outline" className="border-gray-700">
                 Go Back
               </Button>
             )}
