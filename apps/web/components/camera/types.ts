@@ -25,4 +25,4 @@ export interface OCRResult {
   confidence?: number
 }
 
-export { MockDNIData }
+export type { MockDNIData }
