@@ -97,7 +97,11 @@ export default function OnboardingPage() {
                 )}
 
                 {currentStep === 3 && (
-                  <BiometricStep onCapture={handleBiometricCapture} />
+                  <BiometricStep
+                    userId={dniData?.dni ?? ''}
+                    userName={dniData ? `${dniData.nombre} ${dniData.apellido}` : ''}
+                    onCapture={handleBiometricCapture}
+                  />
                 )}
 
                 {currentStep === 4 && (
