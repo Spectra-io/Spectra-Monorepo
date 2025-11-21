@@ -65,7 +65,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-950 via-black to-gray-950 text-white">
+    <main className="min-h-screen bg-gradient-to-b from-gray-950 via-black to-gray-950 text-white overflow-x-hidden">
       <Header />
       <section className="relative overflow-hidden px-5 pt-32 pb-16 lg:pt-40 lg:pb-24">
         <div className="absolute inset-0 bg-gradient-to-b from-purple-950/30 via-purple-900/20 to-black"></div>
@@ -97,7 +97,11 @@ export default function OnboardingPage() {
                 )}
 
                 {currentStep === 3 && (
-                  <BiometricStep onCapture={handleBiometricCapture} />
+                  <BiometricStep
+                    userId={dniData?.dni ?? ''}
+                    userName={dniData ? `${dniData.nombre} ${dniData.apellido}` : ''}
+                    onCapture={handleBiometricCapture}
+                  />
                 )}
 
                 {currentStep === 4 && (

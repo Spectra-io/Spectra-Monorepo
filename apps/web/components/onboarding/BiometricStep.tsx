@@ -4,7 +4,11 @@ import BiometricCapture from '@/components/biometric/BiometricCapture'
 import { useIdentityStore } from '@/store/useIdentityStore'
 
 interface BiometricStepProps {
+  userId?: string | null
+  userName?: string | null
   onCapture: (biometricId: string) => void
+  onError?: (error: string) => void
+  onCancel?: () => void
 }
 
 export function BiometricStep({ onCapture }: BiometricStepProps) {

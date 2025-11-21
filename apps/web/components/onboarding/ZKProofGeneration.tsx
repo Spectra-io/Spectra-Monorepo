@@ -84,10 +84,10 @@ export function ZKProofGeneration({ onComplete, dniData }: ZKProofGenerationProp
   return (
     <div className="space-y-8">
       <div className="text-center space-y-4">
-        <h2 className="text-2xl lg:text-3xl font-bold text-gray-100">
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-100 break-words">
           Generating Zero Knowledge Proofs
         </h2>
-        <p className="text-gray-400 text-lg">
+        <p className="text-gray-400 text-base sm:text-lg break-words">
           Creating cryptographic proofs without revealing your data
         </p>
       </div>
@@ -106,19 +106,21 @@ export function ZKProofGeneration({ onComplete, dniData }: ZKProofGenerationProp
                 transition={{ delay: index * 0.2 }}
                 className="bg-gray-900/50 border border-gray-800 rounded-lg p-6"
               >
-                <div className="flex items-center gap-4">
-                  {isCompleted ? (
-                    <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0" />
-                  ) : isProcessing ? (
-                    <Loader2 className="w-6 h-6 text-purple-400 animate-spin flex-shrink-0" />
-                  ) : (
-                    <div className="w-6 h-6 rounded-full border-2 border-gray-700 flex-shrink-0" />
-                  )}
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-100 mb-1">
-                      {proof.name}
-                    </h3>
-                    <p className="text-sm text-gray-400">{proof.description}</p>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                  <div className="flex items-center gap-4 flex-1 min-w-0">
+                    {isCompleted ? (
+                      <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0" />
+                    ) : isProcessing ? (
+                      <Loader2 className="w-6 h-6 text-purple-400 animate-spin flex-shrink-0" />
+                    ) : (
+                      <div className="w-6 h-6 rounded-full border-2 border-gray-700 flex-shrink-0" />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-base sm:text-lg font-semibold text-gray-100 mb-1 break-words">
+                        {proof.name}
+                      </h3>
+                      <p className="text-sm text-gray-400 break-words">{proof.description}</p>
+                    </div>
                   </div>
                 </div>
               </motion.div>
