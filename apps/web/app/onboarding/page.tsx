@@ -101,7 +101,7 @@ export default function OnboardingPage() {
                 )}
 
                 {currentStep === 4 && (
-                  <ZKProofGeneration onComplete={handleProofGeneration} />
+                  <ZKProofGeneration onComplete={handleProofGeneration} dniData={dniData} />
                 )}
 
                 {currentStep === 5 && (
