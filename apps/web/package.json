@@ -20,6 +20,8 @@
     "@supabase/supabase-js": "^2.39.1",
     "@tanstack/react-query": "^5.13.4",
     "@upstash/redis": "^1.25.1",
+    "@zk-identity/types": "workspace:*",
+    "@zk-identity/zk-circuits": "workspace:*",
     "circomlib": "^2.0.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
