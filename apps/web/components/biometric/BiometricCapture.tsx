@@ -8,7 +8,8 @@ import {
   detectAuthenticatorType,
   registerBiometric
 } from './WebAuthnHelper'
-import { generateUniqueIdentifier, sha256 } from '@/lib/HashingUtils'
+import { generateUniqueIdentifier } from '@/lib/HashingUtils'
+import { sha256 } from '@/lib/HashingUtils'
 import { BiometricCaptureProps, BiometricState, BiometricCredential } from './types'
 import { Fingerprint, Loader2, Check, AlertTriangle, Smartphone } from 'lucide-react'
 

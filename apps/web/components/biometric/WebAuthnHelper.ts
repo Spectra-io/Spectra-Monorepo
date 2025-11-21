@@ -92,7 +92,7 @@ export async function registerBiometric(
     }
 
     // Start registration
-    const credential = await startRegistration(options as any)
+    const credential = await startRegistration(options)
 
     // Process response
     const credentialId = credential.id
@@ -137,7 +137,7 @@ export async function verifyBiometric(
       timeout: 60000
     }
 
-    await startAuthentication(options as any)
+    await startAuthentication(options)
     return true
   } catch (error) {
     console.error('Verification error:', error)

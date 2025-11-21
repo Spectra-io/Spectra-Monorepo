@@ -29,9 +29,3 @@ export interface AuthenticatorInfo {
   available: boolean
   types: string[]
 }
-
-export interface HashResult {
-  hash: string
-  algorithm: 'SHA-256' | 'SHA-512'
-  timestamp: Date
-}

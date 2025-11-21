@@ -43,4 +43,3 @@ export function BiometricStep({ onCapture }: BiometricStepProps) {
     </div>
   )
 }
-
