@@ -112,12 +112,34 @@ export default function CameraCapture({ onCapture, onError, onCancel }: CameraCa
     onError?.('Cannot access camera')
   }
 
-  // If camera error, show error message
+  // Demo Mode: Skip camera and use mock data
+  const handleDemoMode = async () => {
+    setState(prev => ({ ...prev, isProcessing: true }))
+
+    // Simulate processing delay
+    await new Promise(resolve => setTimeout(resolve, 1500))
+
+    // Use mock DNI extraction
+    const mockData = await extractDNIData(null) // null triggers mock mode
+
+    if (mockData.success && mockData.data) {
+      setExtractedData(mockData.data)
+      setState(prev => ({
+        ...prev,
+        isProcessing: false,
+        documentDetected: true,
+        hasPhoto: true,
+        photoDataUrl: 'demo-mode' // flag for demo
+      }))
+    }
+  }
+
+  // If camera error, show error message with demo option
   if (cameraError) {
     return (
       <Card className="bg-gray-900/50 border-gray-800">
         <CardContent className="py-12">
-          <div className="text-center">
+          <div className="text-center space-y-6">
             <AlertTriangle className="w-16 h-16 mx-auto text-yellow-500 mb-4" />
             <h3 className="text-lg font-semibold mb-2 text-gray-100">
               Camera Not Available
@@ -125,11 +147,19 @@ export default function CameraCapture({ onCapture, onError, onCancel }: CameraCa
             <p className="text-gray-400 mb-4">
               {cameraError}
             </p>
-            {onCancel && (
-              <Button onClick={onCancel} variant="outline">
-                Go Back
+            <div className="flex gap-3 justify-center">
+              <Button
+                onClick={handleDemoMode}
+                className="bg-purple-600 hover:bg-purple-700"
+              >
+                Use Demo Mode
               </Button>
-            )}
+              {onCancel && (
+                <Button onClick={onCancel} variant="outline">
+                  Go Back
+                </Button>
+              )}
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -178,24 +208,34 @@ export default function CameraCapture({ onCapture, onError, onCancel }: CameraCa
               </div>
 
               {/* Capture Button */}
-              <div className="mt-6 flex gap-3 justify-center">
-                <Button
-                  onClick={handleCapture}
-                  size="lg"
-                  className="rounded-full w-16 h-16 bg-purple-600 hover:bg-purple-700"
-                >
-                  <CameraIcon className="w-8 h-8" />
-                </Button>
-                {onCancel && (
+              <div className="mt-6 flex flex-col gap-3 items-center">
+                <div className="flex gap-3">
                   <Button
-                    onClick={onCancel}
-                    variant="outline"
+                    onClick={handleCapture}
                     size="lg"
-                    className="border-gray-700 text-gray-300 hover:bg-gray-800"
+                    className="rounded-full w-16 h-16 bg-purple-600 hover:bg-purple-700"
                   >
-                    Cancel
+                    <CameraIcon className="w-8 h-8" />
                   </Button>
-                )}
+                  {onCancel && (
+                    <Button
+                      onClick={onCancel}
+                      variant="outline"
+                      size="lg"
+                      className="border-gray-700 text-gray-300 hover:bg-gray-800"
+                    >
+                      Cancel
+                    </Button>
+                  )}
+                </div>
+                {/* Demo Mode Button - Always available */}
+                <Button
+                  onClick={handleDemoMode}
+                  variant="outline"
+                  className="border-purple-600 text-purple-400 hover:bg-purple-600/10"
+                >
+                  Use Demo Mode (Skip Camera)
+                </Button>
               </div>
             </div>
           )}

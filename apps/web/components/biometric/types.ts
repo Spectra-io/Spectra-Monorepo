@@ -29,3 +29,9 @@ export interface AuthenticatorInfo {
   available: boolean
   types: string[]
 }
+
+export interface HashResult {
+  hash: string
+  algorithm: string
+  timestamp: Date
+}

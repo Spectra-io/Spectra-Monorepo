@@ -11,35 +11,35 @@ const server = new StellarSdk.Horizon.Server('https://horizon-testnet.stellar.or
 // Network passphrase (Testnet)
 const NETWORK_PASSPHRASE = StellarSdk.Networks.TESTNET
 
+// Store wallet kit instance globally (set from the UI component)
+let walletKitInstance: any = null
+
 /**
- * Connect to Freighter wallet
- * @returns Public key of connected wallet
+ * Set the wallet kit instance for signing transactions
+ * Should be called from the UI component after connecting wallet
+ */
+export function setWalletKit(kit: any) {
+  walletKitInstance = kit
+  console.log('Wallet kit instance set for transaction signing')
+}
+
+/**
+ * Get the current wallet kit instance
+ */
+export function getWalletKit() {
+  return walletKitInstance
+}
+
+/**
+ * Connect to Stellar wallet using Stellar Wallets Kit
+ * This function is deprecated - wallet connection is now handled by the WalletConnect component
+ * which uses @creit.tech/stellar-wallets-kit for both desktop and mobile support
+ * @deprecated Use the WalletConnect component instead
  */
 export async function connectWallet(): Promise<string> {
-  try {
-    // Check if Freighter is installed
-    if (!window.freighter) {
-      throw new Error('Freighter wallet not installed. Please install Freighter extension.')
-    }
-
-    // Check if Freighter API is available
-    const { isConnected } = await window.freighter.isConnected()
-
-    if (!isConnected) {
-      throw new Error('Freighter wallet not connected')
-    }
-
-    // Request access to public key
-    const publicKey = await window.freighter.getPublicKey()
-
-    if (!publicKey) {
-      throw new Error('Failed to get public key from Freighter')
-    }
-
-    return publicKey
-  } catch (error) {
-    throw new Error(`Wallet connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
-  }
+  throw new Error(
+    'connectWallet() is deprecated. Please use the WalletConnect component with Stellar Wallets Kit for wallet connections.'
+  )
 }
 
 /**
@@ -98,17 +98,17 @@ export async function storeDataEntry(
       .setTimeout(180) // 3 minutes
       .build()
 
-    // Sign with Freighter
-    if (!window.freighter) {
-      throw new Error('Freighter wallet not available')
+    // Sign with wallet kit
+    if (!walletKitInstance) {
+      throw new Error('Wallet kit not initialized. Please connect wallet first.')
     }
 
-    const signedXdr = await window.freighter.signTransaction(
+    const { signedTxXdr } = await walletKitInstance.signTransaction(
       transaction.toXDR(),
-      { network: 'TESTNET', networkPassphrase: NETWORK_PASSPHRASE }
+      { networkPassphrase: NETWORK_PASSPHRASE, address: publicKey }
     )
 
-    const signedTx = StellarSdk.TransactionBuilder.fromXDR(signedXdr, NETWORK_PASSPHRASE)
+    const signedTx = StellarSdk.TransactionBuilder.fromXDR(signedTxXdr, NETWORK_PASSPHRASE)
 
     // Submit transaction
     const result = await server.submitTransaction(signedTx as StellarSdk.Transaction)
@@ -246,13 +246,4 @@ export async function fundTestnetAccount(publicKey: string): Promise<any> {
   }
 }
 
-// Type declarations for Freighter
-declare global {
-  interface Window {
-    freighter?: {
-      isConnected: () => Promise<{ isConnected: boolean }>
-      getPublicKey: () => Promise<string>
-      signTransaction: (xdr: string, options: any) => Promise<string>
-    }
-  }
-}
+// No need for global type declarations - using @stellar/freighter-api

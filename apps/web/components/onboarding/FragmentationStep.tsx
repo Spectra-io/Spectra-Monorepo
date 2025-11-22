@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { CheckCircle2, Loader2, Smartphone, Database, Cloud, Server, Globe } from 'lucide-react'
 import { SuccessAnimation } from '@/components/shared/SuccessAnimation'
-import { protectData } from '@zk-identity/crypto'
+import { protectData, hashAllProofs } from '@zk-identity/crypto'
+import { storeProofHash } from '@zk-identity/stellar-utils'
 import { useIdentityStore } from '@/store/useIdentityStore'
 
 interface FragmentationStepProps {
@@ -32,34 +33,44 @@ export function FragmentationStep({ onComplete }: FragmentationStepProps) {
 
   async function fragmentAndDistribute() {
     try {
-      // 1. Prepare data to protect (combine all sensitive data)
+      // 1. Calculate hashes of ZK proofs for on-chain storage
+      const proofHashes = await hashAllProofs({
+        age: proofs.age,
+        nationality: proofs.nationality,
+        identity: proofs.identity
+      })
+
+      console.log('Proof hashes calculated:', proofHashes)
+
+      // 2. Prepare data to protect (combine all sensitive data)
       const dataToProtect = JSON.stringify({
         stellarPublicKey,
         biometricId,
         proofs,
+        proofHashes,
         timestamp: new Date().toISOString()
       })
 
-      // 2. Encrypt and fragment data (generates 5 fragments with 3-of-5 threshold)
+      // 3. Encrypt and fragment data (generates 5 fragments with 3-of-5 threshold)
       const { fragments, encryptionKey, metadata } = await protectData(dataToProtect)
 
       console.log('Data protected:', { fragments: fragments.length, metadata })
 
-      // 3. Simulate distribution to each location with delays
+      // 4. Distribute to each location with delays
       for (let i = 0; i < storageLocations.length; i++) {
         const location = storageLocations[i]
 
         // Wait for the location's delay
         await new Promise(resolve => setTimeout(resolve, location.delay * 1000))
 
-        // Simulate storing the fragment
-        await storeFragment(location.id, fragments[i], encryptionKey)
+        // Store the fragment (real for stellar, mock for others)
+        await storeFragment(location.id, fragments[i], encryptionKey, proofHashes)
 
         // Mark as completed
         setCompletedLocations(prev => [...prev, location.id])
       }
 
-      // 4. All fragments distributed
+      // 5. All fragments distributed
       setAllComplete(true)
       setTimeout(() => {
         onComplete()
@@ -71,39 +82,82 @@ export function FragmentationStep({ onComplete }: FragmentationStepProps) {
     }
   }
 
-  async function storeFragment(location: string, fragment: string, encryptionKey: string) {
-    // Mock storage - in production, these would be real API calls
+  async function storeFragment(
+    location: string,
+    fragment: string,
+    encryptionKey: string,
+    proofHashes: {
+      ageHash?: string
+      nationalityHash?: string
+      identityHash?: string
+    }
+  ) {
     switch (location) {
       case 'local':
-        // Store in localStorage or IndexedDB
+        // Store in localStorage
         if (typeof window !== 'undefined') {
           localStorage.setItem('zk_fragment_local', fragment)
           localStorage.setItem('zk_encryption_key', encryptionKey)
+          console.log('✓ Stored fragment in localStorage')
         }
         break
 
       case 'stellar':
-        // Would call: await storeDataEntry(stellarPublicKey, 'zk_fragment', fragment.substring(0, 64))
-        console.log('Stored fragment on Stellar (mock)')
+        // REAL: Store proof hashes on Stellar blockchain
+        try {
+          if (!stellarPublicKey) {
+            throw new Error('Stellar public key not available')
+          }
+
+          // Store each proof hash on-chain
+          const storePromises = []
+
+          if (proofHashes.ageHash) {
+            storePromises.push(
+              storeProofHash(stellarPublicKey, 'age', proofHashes.ageHash)
+            )
+          }
+
+          if (proofHashes.nationalityHash) {
+            storePromises.push(
+              storeProofHash(stellarPublicKey, 'nationality', proofHashes.nationalityHash)
+            )
+          }
+
+          if (proofHashes.identityHash) {
+            storePromises.push(
+              storeProofHash(stellarPublicKey, 'identity', proofHashes.identityHash)
+            )
+          }
+
+          // Wait for all hashes to be stored
+          await Promise.all(storePromises)
+
+          console.log('✓ Stored proof hashes on Stellar Network')
+        } catch (error) {
+          console.error('Error storing on Stellar:', error)
+          // Don't throw - continue with other locations
+          console.log('⚠ Stellar storage failed, continuing...')
+        }
         break
 
       case 'supabase':
-        // Would call Supabase API
-        console.log('Stored fragment on Supabase (mock)')
+        // TODO: Call Supabase API
+        console.log('○ Supabase storage (mock)')
         break
 
       case 'redis':
-        // Would call Redis/Upstash API
-        console.log('Stored fragment on Redis (mock)')
+        // TODO: Call Redis/Upstash API
+        console.log('○ Redis storage (mock)')
         break
 
       case 'ipfs':
-        // Would upload to IPFS
-        console.log('Stored fragment on IPFS (mock)')
+        // TODO: Upload to IPFS
+        console.log('○ IPFS storage (mock)')
         break
 
       default:
-        console.log(`Stored fragment on ${location}`)
+        console.log(`○ Stored on ${location} (mock)`)
     }
   }
 

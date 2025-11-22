@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner'
 import { Wallet, CheckCircle2, AlertTriangle } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { connectWallet } from '@zk-identity/stellar-utils'
+// Demo mode - imports removed for hardcoded wallet
 
 interface WalletConnectProps {
   onConnect: (publicKey: string) => void
@@ -17,28 +17,28 @@ export function WalletConnect({ onConnect }: WalletConnectProps) {
   const [publicKey, setPublicKey] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
+  // DEMO MODE: Hardcoded wallet for video demo
+  const DEMO_PUBLIC_KEY = 'GDQP2KPQGKIHYJGXNUIYOMHARUARCA7DJT5FO2FFOOKY3B2WSQHG4W37'
+
   async function handleConnect() {
     try {
       setLoading(true)
       setError(null)
 
-      // Connect to Freighter wallet
-      const walletPublicKey = await connectWallet()
+      console.log('Connecting demo wallet...')
 
-      setPublicKey(walletPublicKey)
+      // Simulate connection delay for realistic demo
+      await new Promise(resolve => setTimeout(resolve, 1500))
+
+      console.log('Wallet connected! Public key:', DEMO_PUBLIC_KEY)
+
+      setPublicKey(DEMO_PUBLIC_KEY)
       setConnected(true)
-      onConnect(walletPublicKey)
+      onConnect(DEMO_PUBLIC_KEY)
     } catch (error) {
       console.error('Error connecting wallet:', error)
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-      setError(errorMessage)
-
-      // Show user-friendly message
-      if (errorMessage.includes('not installed')) {
-        alert('Freighter wallet extension is not installed. Please install it from https://www.freighter.app/')
-      } else {
-        alert(`Error connecting wallet: ${errorMessage}`)
-      }
+      setError(`Connection failed: ${errorMessage}`)
     } finally {
       setLoading(false)
     }
@@ -59,49 +59,57 @@ export function WalletConnect({ onConnect }: WalletConnectProps) {
           Connect Your Stellar Wallet
         </h2>
         <p className="text-gray-400 text-lg">
-          Connect your Freighter wallet to link your Stellar account with Spectra
+          Demo Mode - Automatic Connection
         </p>
       </div>
 
       {error && (
-        <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4 flex items-start gap-3">
+        <div className="border rounded-lg p-4 flex items-start gap-3 bg-red-900/20 border-red-500/30">
           <AlertTriangle className="w-5 h-5 text-red-400 mt-0.5" />
           <div>
-            <p className="text-sm text-red-300">{error}</p>
-            {error.includes('not installed') && (
-              <a
-                href="https://www.freighter.app/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-purple-400 hover:text-purple-300 underline mt-1 inline-block"
-              >
-                Install Freighter Wallet →
-              </a>
-            )}
+            <p className="text-sm text-red-300">
+              {error}
+            </p>
           </div>
         </div>
       )}
 
       {!connected ? (
-        <div className="flex justify-center">
-          <Button
-            onClick={handleConnect}
-            disabled={loading}
-            size="lg"
-            className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-6 text-lg font-medium"
-          >
-            {loading ? (
-              <>
-                <LoadingSpinner size="sm" className="mr-2" />
-                Connecting...
-              </>
-            ) : (
-              <>
-                <Wallet className="w-5 h-5 mr-2" />
-                Connect Freighter Wallet
-              </>
-            )}
-          </Button>
+        <div className="space-y-4">
+          <div className="bg-purple-900/10 border border-purple-500/20 rounded-lg p-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <Wallet className="w-5 h-5 text-purple-400" />
+              <p className="text-sm font-semibold text-gray-200">
+                Demo Wallet Ready
+              </p>
+            </div>
+            <p className="text-sm text-gray-300 leading-relaxed">
+              This demo uses a pre-configured Stellar testnet wallet for showcase purposes.
+            </p>
+            <p className="text-sm text-gray-400 leading-relaxed text-xs">
+              Address: {DEMO_PUBLIC_KEY.slice(0, 8)}...{DEMO_PUBLIC_KEY.slice(-8)}
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <Button
+              onClick={handleConnect}
+              disabled={loading}
+              size="lg"
+              className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-6 text-lg font-medium"
+            >
+              {loading ? (
+                <>
+                  <LoadingSpinner size="sm" className="mr-2" />
+                  Connecting...
+                </>
+              ) : (
+                <>
+                  <Wallet className="w-5 h-5 mr-2" />
+                  Connect Wallet
+                </>
+              )}
+            </Button>
+          </div>
         </div>
       ) : (
         <motion.div

@@ -3,7 +3,17 @@
  * Split secrets into fragments where any 3 can reconstruct the original
  */
 
-import secrets from 'secrets.js-34r7h'
+// Dynamic import to avoid SSR issues with secrets.js (uses window)
+let secrets: any = null
+
+async function getSecretsLib() {
+  if (secrets) return secrets
+  if (typeof window === 'undefined') {
+    throw new Error('Shamir secret sharing can only be used in the browser')
+  }
+  secrets = (await import('secrets.js-34r7h')).default
+  return secrets
+}
 
 /**
  * Create Shamir Secret Sharing fragments
@@ -12,11 +22,11 @@ import secrets from 'secrets.js-34r7h'
  * @param threshold - Minimum shares needed to reconstruct (default: 3)
  * @returns Array of share fragments as hex strings
  */
-export function createShamirShares(
+export async function createShamirShares(
   secret: string,
   totalShares: number = 5,
   threshold: number = 3
-): string[] {
+): Promise<string[]> {
   // Validation
   if (threshold > totalShares) {
     throw new Error('Threshold cannot be greater than total shares')
@@ -31,12 +41,14 @@ export function createShamirShares(
   }
 
   try {
+    const secretsLib = await getSecretsLib()
+
     // Convert secret to hex if it's not already
     const hexSecret = stringToHex(secret)
 
     // Create shares using secrets.js
     // secrets.js expects hex strings and returns hex strings
-    const shares = secrets.share(hexSecret, totalShares, threshold)
+    const shares = secretsLib.share(hexSecret, totalShares, threshold)
 
     return shares
   } catch (error) {
@@ -49,7 +61,7 @@ export function createShamirShares(
  * @param shares - Array of share fragments (minimum 'threshold' shares needed)
  * @returns Reconstructed secret
  */
-export function reconstructFromShares(shares: string[]): string {
+export async function reconstructFromShares(shares: string[]): Promise<string> {
   // Validation
   if (!shares || shares.length === 0) {
     throw new Error('No shares provided for reconstruction')
@@ -60,8 +72,10 @@ export function reconstructFromShares(shares: string[]): string {
   }
 
   try {
+    const secretsLib = await getSecretsLib()
+
     // Combine shares to reconstruct the hex secret
-    const hexSecret = secrets.combine(shares)
+    const hexSecret = secretsLib.combine(shares)
 
     // Convert hex back to string
     const secret = hexToString(hexSecret)
@@ -138,9 +152,9 @@ function hexToString(hex: string): string {
  * Test if shares can be reconstructed
  * Useful for validation
  */
-export function testReconstruction(shares: string[], originalSecret: string): boolean {
+export async function testReconstruction(shares: string[], originalSecret: string): Promise<boolean> {
   try {
-    const reconstructed = reconstructFromShares(shares)
+    const reconstructed = await reconstructFromShares(shares)
     return reconstructed === originalSecret
   } catch {
     return false

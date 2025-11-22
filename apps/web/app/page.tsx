@@ -1,14 +1,43 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Header } from '@/components/Header'
-import { Shield, Lock, Fingerprint, Key, Database, CheckCircle2, ArrowRight } from 'lucide-react'
+import { Shield, Lock, Fingerprint, Key, Database, CheckCircle2, ArrowRight, Smartphone, X } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 
+// Detect if user is NOT on mobile device
+function isDesktopOrTablet(): boolean {
+  if (typeof window === 'undefined') return false
+  return !/Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+}
+
 export default function Home() {
+  const [showMobileWarning, setShowMobileWarning] = useState(false)
+  const [isDesktop, setIsDesktop] = useState(false)
+
+  useEffect(() => {
+    const checkDevice = isDesktopOrTablet()
+    setIsDesktop(checkDevice)
+
+    // Show modal only on desktop/tablet and if user hasn't dismissed it
+    const hasSeenWarning = localStorage.getItem('mobile-warning-dismissed')
+    if (checkDevice && !hasSeenWarning) {
+      // Show modal after a short delay for better UX
+      setTimeout(() => {
+        setShowMobileWarning(true)
+      }, 1000)
+    }
+  }, [])
+
+  const dismissWarning = () => {
+    setShowMobileWarning(false)
+    localStorage.setItem('mobile-warning-dismissed', 'true')
+  }
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-950 via-black to-gray-950 text-white overflow-x-hidden relative">
       {/* Global Background Effects */}
@@ -16,7 +45,106 @@ export default function Home() {
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(139,92,246,0.2),transparent_50%)] pointer-events-none"></div>
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_80%_70%,rgba(236,72,153,0.15),transparent_50%)] pointer-events-none"></div>
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.1),transparent_70%)] pointer-events-none"></div>
-      
+
+      {/* Mobile Warning Modal */}
+      <AnimatePresence>
+        {showMobileWarning && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+              onClick={dismissWarning}
+            />
+
+            {/* Modal */}
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                transition={{ duration: 0.3, type: 'spring' }}
+                className="relative bg-gradient-to-b from-gray-900 to-gray-950 border-2 border-purple-500/30 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Purple glow effect */}
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(139,92,246,0.15),transparent_50%)] pointer-events-none"></div>
+
+                {/* Close button */}
+                <button
+                  onClick={dismissWarning}
+                  className="absolute top-4 right-4 p-2 rounded-full bg-gray-800/50 hover:bg-gray-700/50 transition-colors z-10"
+                  aria-label="Close"
+                >
+                  <X className="w-5 h-5 text-gray-400" />
+                </button>
+
+                <div className="relative p-8 space-y-6">
+                  {/* Icon */}
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                    className="flex justify-center"
+                  >
+                    <div className="w-20 h-20 rounded-full bg-purple-500/10 border-2 border-purple-500/30 flex items-center justify-center">
+                      <Smartphone className="w-10 h-10 text-purple-400" />
+                    </div>
+                  </motion.div>
+
+                  {/* Title */}
+                  <div className="text-center space-y-2">
+                    <h3 className="text-2xl font-bold text-gray-100">
+                      Mobile Optimized
+                    </h3>
+                    <p className="text-gray-400 text-base leading-relaxed">
+                      This app is designed to be used from your phone to take advantage of the camera and biometric authentication.
+                    </p>
+                  </div>
+
+                  {/* Info cards */}
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3 bg-purple-900/10 border border-purple-500/20 rounded-lg p-3">
+                      <CheckCircle2 className="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" />
+                      <p className="text-sm text-gray-300">
+                        ID capture with camera
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-3 bg-purple-900/10 border border-purple-500/20 rounded-lg p-3">
+                      <CheckCircle2 className="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" />
+                      <p className="text-sm text-gray-300">
+                        Touch ID / Face ID
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-3 bg-purple-900/10 border border-purple-500/20 rounded-lg p-3">
+                      <CheckCircle2 className="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" />
+                      <p className="text-sm text-gray-300">
+                        Freighter mobile wallet
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Action button */}
+                  <Button
+                    onClick={dismissWarning}
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white py-6 text-base font-semibold rounded-lg"
+                  >
+                    Got it
+                  </Button>
+
+                  <p className="text-xs text-gray-500 text-center">
+                    You can continue on desktop, but the experience is better on mobile
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
+
       <div className="relative z-10">
       <Header />
       {/* Hero Section */}
@@ -129,7 +257,7 @@ export default function Home() {
                       viewport={{ once: true }}
                       transition={{ delay: 0.6 }}
                     >
-                      <span className="text-gray-500">//</span> <span className="text-gray-500 italic">Generate ZK proof for identity</span>
+                      <span className="text-gray-500">{'//'}</span> <span className="text-gray-500 italic">Generate ZK proof for identity</span>
                     </motion.div>
                     <motion.div
                       className="text-gray-300"
@@ -165,7 +293,7 @@ export default function Home() {
                       viewport={{ once: true }}
                       transition={{ delay: 1.0 }}
                     >
-                      <span className="text-blue-400">anchor</span>: <span className="text-green-400">"stellar"</span>
+                      <span className="text-blue-400">anchor</span>: <span className="text-green-400">&quot;stellar&quot;</span>
                     </motion.div>
                     <motion.div
                       className="text-gray-300"
@@ -183,7 +311,7 @@ export default function Home() {
                       viewport={{ once: true }}
                       transition={{ delay: 1.2 }}
                     >
-                      <span className="text-gray-500">//</span> <span className="text-green-400">✓ Proof generated</span>
+                      <span className="text-gray-500">{'//'}</span> <span className="text-green-400">✓ Proof generated</span>
                     </motion.div>
                     <motion.div
                       className="text-gray-400"
@@ -192,7 +320,7 @@ export default function Home() {
                       viewport={{ once: true }}
                       transition={{ delay: 1.3 }}
                     >
-                      <span className="text-gray-500">//</span> <span className="text-gray-500 italic">Access granted to all Stellar anchors</span>
+                      <span className="text-gray-500">{'//'}</span> <span className="text-gray-500 italic">Access granted to all Stellar anchors</span>
                     </motion.div>
                   </div>
                 </div>

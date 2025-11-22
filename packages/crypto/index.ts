@@ -44,11 +44,11 @@ export async function decryptData(encryptedData: string, key: string): Promise<s
  * @param threshold - Minimum shares needed (default: 3)
  * @returns Array of fragments
  */
-export function createShamirShares(
+export async function createShamirShares(
   data: string,
   totalShares: number = 5,
   threshold: number = 3
-): string[] {
+): Promise<string[]> {
   return createShares(data, totalShares, threshold)
 }
 
@@ -57,7 +57,7 @@ export function createShamirShares(
  * @param shares - Array of shares (minimum threshold needed)
  * @returns Reconstructed data
  */
-export function reconstructFromShares(shares: string[]): string {
+export async function reconstructFromShares(shares: string[]): Promise<string> {
   return reconstructShares(shares)
 }
 
@@ -95,7 +95,7 @@ export async function protectData(
     const encrypted = await encryptData(data, encryptionKey)
 
     // 3. Create Shamir shares (3-of-5)
-    const fragments = createShamirShares(encrypted, 5, 3)
+    const fragments = await createShamirShares(encrypted, 5, 3)
 
     return {
       fragments,
@@ -128,7 +128,7 @@ export async function recoverData(
     }
 
     // 1. Reconstruct encrypted data from fragments
-    const encrypted = reconstructFromShares(fragments.slice(0, 3))
+    const encrypted = await reconstructFromShares(fragments.slice(0, 3))
 
     // 2. Decrypt data
     const decrypted = await decryptData(encrypted, encryptionKey)
@@ -141,6 +141,60 @@ export async function recoverData(
 
 // Re-export utility functions
 export { generateFragmentMetadata, validateShare }
+
+/**
+ * Hash a ZK proof for on-chain storage
+ * @param proof - ZK proof object or string
+ * @returns SHA-256 hash (64 characters hex)
+ */
+export async function hashProof(proof: any): Promise<string> {
+  try {
+    // Convert proof to string if it's an object
+    const proofString = typeof proof === 'string' ? proof : JSON.stringify(proof)
+
+    // Hash using SHA-256
+    const hash = await hashData(proofString)
+
+    return hash
+  } catch (error) {
+    throw new Error(`Failed to hash proof: ${error instanceof Error ? error.message : 'Unknown error'}`)
+  }
+}
+
+/**
+ * Hash multiple ZK proofs
+ * @param proofs - Object containing age, nationality, and identity proofs
+ * @returns Object with hashes for each proof type
+ */
+export async function hashAllProofs(proofs: {
+  age?: any
+  nationality?: any
+  identity?: any
+}): Promise<{
+  ageHash?: string
+  nationalityHash?: string
+  identityHash?: string
+}> {
+  const result: {
+    ageHash?: string
+    nationalityHash?: string
+    identityHash?: string
+  } = {}
+
+  if (proofs.age) {
+    result.ageHash = await hashProof(proofs.age)
+  }
+
+  if (proofs.nationality) {
+    result.nationalityHash = await hashProof(proofs.nationality)
+  }
+
+  if (proofs.identity) {
+    result.identityHash = await hashProof(proofs.identity)
+  }
+
+  return result
+}
 
 // Export types
 export interface ProtectionResult {
